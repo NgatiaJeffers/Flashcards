@@ -6,6 +6,7 @@ class Config:
     '''
 
     SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://moringa-access:Access@localhost/pitch'
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
 class ProdConfig(Config):
