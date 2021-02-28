@@ -1,5 +1,5 @@
 from . import main
-from flask import render_template, redirect, url_for, abort
+from flask import render_template, request, redirect, url_for, abort
 from flask_login import login_required, current_user
 from ..models import User, Pitch, Comment
 from .forms import UpdateProfile, PitchForm, CommentForm
@@ -35,7 +35,7 @@ def profile(uname):
     pitches_posted = Pitch.query.filter_by(user_id = current_user).all()
     return render_template('profile/profile.html', user = user, pitches = pitches_posted)
 
-@main.route('/user/<uname>/update', methods = ['GET', POST])
+@main.route('/user/<uname>/update', methods = ['GET', 'POST'])
 @login_required
 def update_profile(unam):
     user = User.query.filter_by(username = uname).first()
@@ -57,10 +57,10 @@ def update_profile(unam):
 @main.route('/user/<uname>/update/pic', methods = ['POST'])
 @login_required
 def update_pic(uname):
-    user = USer.query.filter_by(username = uname).first()
+    user = User.query.filter_by(username = uname).first()
 
     if 'photo' in request.files:
-        filename = photo.save(request.files['photo'])
+        filename = photos.save(request.files['photo'])
         path = 'photo/{}'.format(filename)
         user.profile_pic_path = path
         db.session.commit()
@@ -69,3 +69,49 @@ def update_pic(uname):
 @main.route('/new/pitch', methods = ['GET', 'POST'])
 @login_required
 def new_pitch():
+    form = PitchForm()
+    if form.validate_on_submit():
+        pitch_title = form.title.data
+        pitch_body = form.pitch.data
+
+        pitch_title = markdown2.markdown(pitch_title,)
+        pitch_body = markdown2.markdown(pitch_body)
+        new_pitch = Pitch(pitch_title = pitch_title, pitch_body = pitch_body, user = current_user, category =form.category.data, postedBy = current_user)
+        new_pitch.save_pitch()
+
+    title = 'Pitch Perfect'
+    return render_template('pitch/new_pitch.html', title = title, pitch_form = form)
+
+@main.route('/pitch/comment/new/<int:id>', methods = ['GET', 'POST'])
+@login_required
+def new_comment(id):
+    form = CommentForm()
+    pitch = Pitch.query.filter_by( id = id).first()
+
+    if form.validators_on_submit():
+        title = form.title.data
+        comment = form.comment.data
+
+        title = markdown2.markdown(title)
+        comment = markdown2.markdown(comment)
+
+        new_comment = Comment(title = title, comment = comment, user = current_user, user_pitch = pitch, postedBy = current_user.username)
+        new_comment.save_comment()
+
+        return redirect(url_for('.pitch', id = id))
+
+    title = 'Pitch Perfect'
+
+    return render_template('pitch/new_comment.html', title = title, form = form, pitch = pitch)
+
+@main.route('/pitch/<int:id>')
+@login_required
+def pitch(id):
+    pitch = Pitch.query.filter_by(id = id).first()
+
+    comment = Comment.query.filter_by(pitch_id = pitch_id).all()
+    comments = Comment.get_comments(id)
+    commentBy = User.query.filter_by(id = Comment.User_id).all()
+
+    return render_template('pitch/pitch.html', pitch = pitch, comment = comment, commentBy = commentBy,  comments = comments, postedBy = current_user.username)
+    
