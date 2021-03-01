@@ -1,78 +1,65 @@
 {% extends 'base.html' %}
 
-<!-- Styles block -->
-{% block styles %}
-{{ super() }}
-<link rel="stylesheet" href="{{ url_for('static', filename = 'css/main.css') }}">
-{% endblock %}
-
 {% block content %}
-<div class="page-heading">
-    <div class="media clearfix">
-        <div class="media-left pr30">
-            <a href="#">
-                {% if user.profile_pic_path %}
-                <img class="media-object mw150" src="{{url_for('static',filename=user.profile_pic_path)}}" alt="...">
-
-                {%else%}
-                <p>No profile picture</p>
-
-                {% endif %}
-            </a>
-        </div>
-        <div class="media-body va-m">
-            <h2 class="media-heading">{{username | capitalize}}
-                <small> - Profile</small>
-            </h2>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <h3>{{username|capitalize}}</h3>
             {% if user.bio %}
-            <p class="lead">{{ user.bio }}</p>
+            <p> {{user.bio}} </p>
             {% else %}
-            <p class="lead">{{ username | capitalize }} has no bio</p>
+            <p> {{user.username|capitalize}} has no bio </p>
             {% endif %}
         </div>
-    </div>
-</div>
+        <div class="col-md-4">
+            {% if user.profile_pic_path %}
 
+            <img src="{{url_for('static',filename=user.profile_pic_path)}}" alt="" class="img-thumbnail">
 
-<div class="container">
-    <div class="col-md-4">
-        {% if user == current_user %}
-        <form action="{{url_for('main.update_pic',uname=user.username)}}" method="post" enctype="multipart/form-data">
+            {%else%}
+            <p>No profile picture</p>
 
-            <input type="file" name="photo" class="form-control" required>
-            <input type="submit" class="btn btn-default btn-sm">
-        </form>
-        {% endif %}
-    </div>
-    <div class="col-md-4">
-        <a href="{{url_for('main.update_profile', uname=user.username)}}">Edit profile</a>
-    </div>
+            {% endif %}
 
-</div>
-<div class="row">
-    {% if pitches %}
-    <h3 style="text-transform: uppercase">My Pitches</h3>
-    <hr>
-    {% for pitch in pitches %}
+            {% if user == current_user %}
+            <form action="{{url_for('main.update_pic',uname=user.username)}}" method="post"
+                enctype="multipart/form-data">
 
-
-
-    <div class="panel panel-success">
-        <div class="panel-heading">{{pitch.category}}</div>
-        <div class="panel-body">
-            <i>{{pitch.pitch_title|safe}}</i>
-            <p></p>{{pitch.pitch_body|safe}}<p></p>{{pitch.posted_at}}
+                <input type="file" name="photo" class="form-control" required>
+                <input type="submit" class="btn btn-default btn-sm">
+            </form>
+            {% endif %}
         </div>
-        <div class="panel-footer">
-            <a href="{{url_for('main.delete_pitch', id=pitch.id)}}">
-                <i title="Delete pitch." class="glyphicon glyphicon-trash"></i>
-            </a>
+        <div class="col-md-4">
+            <a href="{{url_for('main.update_profile', uname=user.username)}}">Edit profile</a>
         </div>
-    </div>
 
-    {% endfor %}
-    {% else %}
-    <h1>You have no pitches!</h1>
-    {% endif %}
+    </div>
+    <div class="row">
+        {% if pitches %}
+        <h3 style="text-transform: uppercase">My Pitches</h5>
+            <hr>
+            {% for pitch in pitches %}
+
+
+
+            <div class="panel panel-success">
+                <div class="panel-heading">{{pitch.category}}</div>
+                <div class="panel-body">
+                    <i>{{pitch.pitch_title|safe}}</i>
+                    <p></p>{{pitch.pitch_body|safe}}<p></p>{{pitch.posted_at}}
+                </div>
+                <div class="panel-footer">
+                    <a href="{{url_for('main.delete_pitch', id=pitch.id)}}">
+                        <i title="Delete pitch." class="glyphicon glyphicon-trash"></i>
+                    </a>
+                </div>
+            </div>
+
+            {% endfor %}
+            {% else %}
+            <h1>You have no pitches!</h1>
+            {% endif %}
+    </div>
 </div>
 {% endblock %}

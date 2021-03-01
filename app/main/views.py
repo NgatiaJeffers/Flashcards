@@ -18,7 +18,7 @@ def index():
         'Playlists',
         'Extensions',
         'Trends'
-    ]
+        ]
 
     title = 'Pitch Perfect'
     pitches = Pitch.query.all()
@@ -37,7 +37,7 @@ def profile(uname):
 
 @main.route('/user/<uname>/update', methods = ['GET', 'POST'])
 @login_required
-def update_profile(unam):
+def update_profile(uname):
     user = User.query.filter_by(username = uname).first()
 
     if user is None:
@@ -61,7 +61,7 @@ def update_pic(uname):
 
     if 'photo' in request.files:
         filename = photos.save(request.files['photo'])
-        path = 'photo/{}'.format(filename)
+        path = 'photos/{}'.format(filename)
         user.profile_pic_path = path
         db.session.commit()
     return redirect(url_for('main.profile', uname = uname))
@@ -74,8 +74,8 @@ def new_pitch():
         pitch_title = form.title.data
         pitch_body = form.pitch.data
 
-        pitch_title = markdown2.markdown(pitch_title,)
-        pitch_body = markdown2.markdown(pitch_body)
+        pitch_title = markdown2.markdown(pitch_title, extras=["code-friendly", "fenced-code-blocks"])
+        pitch_body = markdown2.markdown(pitch_body, extras=["code-friendly", "fenced-code-blocks"])
         new_pitch = Pitch(pitch_title = pitch_title, pitch_body = pitch_body, user = current_user, category =form.category.data, postedBy = current_user)
         new_pitch.save_pitch()
 
@@ -88,12 +88,12 @@ def new_comment(id):
     form = CommentForm()
     pitch = Pitch.query.filter_by( id = id).first()
 
-    if form.validators_on_submit():
+    if form.validate_on_submit():
         title = form.title.data
         comment = form.comment.data
 
-        title = markdown2.markdown(title)
-        comment = markdown2.markdown(comment)
+        title = markdown2.markdown(title, extras=["code-friendly", "fenced-code-blocks"])
+        comment = markdown2.markdown(comment, extras=["code-friendly", "fenced-code-blocks"])
 
         new_comment = Comment(title = title, comment = comment, user = current_user, user_pitch = pitch, postedBy = current_user.username)
         new_comment.save_comment()
@@ -102,14 +102,14 @@ def new_comment(id):
 
     title = 'Pitch Perfect'
 
-    return render_template('pitch/new_comment.html', title = title, form = form, pitch = pitch)
+    return render_template('pitch/comment.html', title = title, form = form, pitch = pitch)
 
 @main.route('/pitch/<int:id>')
 @login_required
 def pitch(id):
     pitch = Pitch.query.filter_by(id = id).first()
 
-    comment = Comment.query.filter_by(pitch_id = pitch_id).all()
+    comment = Comment.query.filter_by(pitch_id = pitch.id).all()
     comments = Comment.get_comments(id)
     commentBy = User.query.filter_by(id = Comment.User_id).all()
 

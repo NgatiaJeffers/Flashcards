@@ -8,15 +8,15 @@
 
             <div class="list-group">
                 <a class="list-group-item active">{{pitch.category}}</a>
-                
+
                 <i>{{pitch.pitch_title|safe}}</i>
-                <p></p>{{pitch.pitch_body|safe}}<p></p>{{pitch.posted_at}}
-                {% if pitch.posted_by == None %}
-                <p></p><b>~~Anonymous</b></a>
+                <p></p>{{pitch.pitch_body|safe}}<p></p>{{pitch.posted}}
+                {% if pitch.postedBy == None %}
+                <p></p><b>Anonymous</b></a>
                 {% else %}
-                <p></p><b>~~{{pitch.posted_by|safe}}</b><a></a>
+                <p></p><b>{{pitch.postedBy|safe}}</b><a></a>
                 {% endif %}
-           
+
             </div>
 
         </div>

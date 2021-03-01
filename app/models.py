@@ -25,7 +25,7 @@ class User(UserMixin, db.Model):
 
     @property
     def password(self):
-        raise ArithmeticError('You cannot read the password attribute')
+        raise AttributeError('You cannot read the password attribute')
 
     @password.setter
     def password(self, password):
@@ -62,7 +62,7 @@ class Comment(db.Model):
     title = db.Column(db.String)
     comment = db.Column(db.String)
     postedBy = db.Column(db.String)
-    postedAt = db.Column(db.DateTime, default = datetime.utcnow)
+    posted = db.Column(db.DateTime, default = datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     pitch_id = db.Column(db.Integer, db.ForeignKey('pitches.id'))
 
