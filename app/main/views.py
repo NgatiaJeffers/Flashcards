@@ -26,13 +26,14 @@ def index():
     return render_template('index.html', title = title, pitches = pitches, categories = categories)
 
 @main.route('/user/<uname>')
+@login_required
 def profile(uname):
     user = User.query.filter_by(username = uname).first()
 
     if user is None:
         abort(404)
 
-    pitches_posted = Pitch.query.filter_by(user_id = current_user).all()
+    pitches_posted = Pitch.query.filter_by(user_id = current_user.id).all()
     return render_template('profile/profile.html', user = user, pitches = pitches_posted)
 
 @main.route('/user/<uname>/update', methods = ['GET', 'POST'])
@@ -50,7 +51,7 @@ def update_profile(uname):
         db.session.add(user)
         db.session.commit()
 
-        return redirect(url_for('.profile', uname = user.usename))
+        return redirect(url_for('.profile', uname = user.username))
 
     return render_template('profile/update.html', form = form)
 
@@ -76,7 +77,7 @@ def new_pitch():
 
         pitch_title = markdown2.markdown(pitch_title, extras=["code-friendly", "fenced-code-blocks"])
         pitch_body = markdown2.markdown(pitch_body, extras=["code-friendly", "fenced-code-blocks"])
-        new_pitch = Pitch(pitch_title = pitch_title, pitch_body = pitch_body, user = current_user, category =form.category.data, postedBy = current_user)
+        new_pitch = Pitch(pitch_title = pitch_title, pitch_body = pitch_body, user = current_user, category =form.category.data, postedBy = current_user.username)
         new_pitch.save_pitch()
 
     title = 'Pitch Perfect'
@@ -111,7 +112,7 @@ def pitch(id):
 
     comment = Comment.query.filter_by(pitch_id = pitch.id).all()
     comments = Comment.get_comments(id)
-    commentBy = User.query.filter_by(id = Comment.User_id).all()
+    commentBy = User.query.filter_by(id = Comment.user_id).all()
 
     return render_template('pitch/pitch.html', pitch = pitch, comment = comment, commentBy = commentBy,  comments = comments, postedBy = current_user.username)
     
