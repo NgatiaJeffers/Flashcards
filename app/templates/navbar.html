@@ -23,20 +23,27 @@
                 {% if current_user.is_authenticated %}
                 <li class="nav-item">
                     <a class="nav-link nav-link-icon" href="#">
-                        <i class="fab fa-facebook-square"></i>
                         <span class="nav-link-inner--text">{{current_user.username}}</span>
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link nav-link-icon" href="{{url_for('main.profile', uname=current_user.username)}}">
+                        <span class="nav-link-inner--text">Profile</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-link-icon" href="{{url_for('main.new_pitch', uname=current_user.username)}}">
+                        <span class="nav-link-inner--text">Write Something</span>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link nav-link-icon" href="{{url_for('auth.logout')}}">
-                        <i class="fab fa-twitter"></i>
                         <span class="nav-link-inner--text">Sign Out</span>
                     </a>
                 </li>
                 {% else %}
                 <li class="nav-item">
                     <a class="nav-link nav-link-icon" href="{{url_for('auth.login')}}">
-                        <i class="fab fa-instagram"></i>
                         <span class="nav-link-inner--text">Sign In</span>
                     </a>
                 </li>
