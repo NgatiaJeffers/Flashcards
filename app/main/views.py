@@ -13,7 +13,7 @@ def index():
     '''
     categories = [
         'pickup lines',
-        'Elevator Pitch'
+        'Elevator Pitch',
         'Tech Quotes',
         'Playlists',
         'Extensions',
@@ -116,3 +116,10 @@ def pitch(id):
 
     return render_template('pitch/pitch.html', pitch = pitch, comment = comment, commentBy = commentBy,  comments = comments, postedBy = current_user.username)
     
+@main.route('/pitch/delete/<int:id>')
+@login_required
+def delete_pitch(id):
+    pitch = Pitch.query.filter_by(id=id).first()
+    db.session.delete(pitch)
+    db.session.commit()
+    return redirect(url_for('main.profile', uname=current_user.username))

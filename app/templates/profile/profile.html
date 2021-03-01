@@ -47,7 +47,7 @@
                 <div class="panel-heading">{{pitch.category}}</div>
                 <div class="panel-body">
                     <i>{{pitch.pitch_title|safe}}</i>
-                    <p></p>{{pitch.pitch_body|safe}}<p></p>{{pitch.posted_at}}
+                    <p></p>{{pitch.pitch_body|safe}}<p></p>{{pitch.posted}}
                 </div>
                 <div class="panel-footer">
                     <a href="{{url_for('main.delete_pitch', id=pitch.id)}}">
