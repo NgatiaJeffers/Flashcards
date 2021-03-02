@@ -25,9 +25,9 @@
         <dt>{{item.title|safe}}</dt>
         <dd>{{item.comment|safe}}</dd>
         <dd>{% if item.postedBy == None %}
-            ~~Anonymous
+            John Doe
             {% else %}
-            ~~{{item.postedBy}}
+            {{item.postedBy}}
             {% endif %}
     </dl>
 
