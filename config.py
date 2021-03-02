@@ -36,6 +36,7 @@ class DevConfig(Config):
     Args:
         Config: The parent configuration class with General configuaration settings
     '''
+    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://postgres:Access@localhost/jefferson'
 
 class TestConfig(Config):
     '''
@@ -44,6 +45,7 @@ class TestConfig(Config):
     Args:
         Config: The parent configuration class with General configuration settings
     '''
+    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://postgres:Access@localhost/jefferson_test'
 
     DEBUG = True
 
