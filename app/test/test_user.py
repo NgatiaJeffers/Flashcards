@@ -3,6 +3,9 @@ from app.models import User
 
 
 class TestUser(unittest.TestCase):
+    '''
+    Test Class to test the behaviour of the User class
+    '''
     def setUp(self):
         self.user_John_Doe = User(username = 'John Doe', password = 'qwerty900', email = 'johndoe@gmail.com', bio = 'I love coding',
         profile_pi_path = 'https://image.tmdb.org/t/p/w500/jdjdjdjn', pitch = 'talk is cheap show me the codes')

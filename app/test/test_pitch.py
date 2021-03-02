@@ -4,7 +4,7 @@ from app.models import Pitch, User
 
 class PitchTest(unittest.TestCase):
     '''
-    Test Class to test the behaviour of the Movie class
+    Test Class to test the behaviour of the Pitch class
     '''
     def setUp(self):
         self.user_John_Doe = User(username = 'John Doe', password = 'qwerty900', email = 'johndoe@gmail.com', bio = 'I love coding',
@@ -16,7 +16,7 @@ class PitchTest(unittest.TestCase):
         Pitch.Clear_pitch()
 
     def test_instance(self):
-        self.assertTrue(isinstance(self.new_review, Pitch))
+        self.assertTrue(isinstance(self.new_pitch, Pitch))
 
     def test_check_intasnce_variables(self):
         self.assertEquals(self.new_pitch.pitch_id, 1234)
@@ -29,8 +29,3 @@ class PitchTest(unittest.TestCase):
     def test_save_pitch(self):
         self.new_pitch.save_pitch()
         self.assertTrue(len(Pitch.query.all() > 0))
-
-    def test_get_pitch_by_id(self):
-        self.new_pitch.save_pitch()
-        got_pitch = Pitch.get_pitch(1234)
-        self.assertTrue(len(got_pitch) == 1)
